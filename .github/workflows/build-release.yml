@@ -34,7 +34,7 @@ jobs:
 
       - name: Create installer
         run: |
-          "C:\Program Files (x86)\Inno Setup 6\iscc.exe" .\setup.iss
+          & "C:\Program Files (x86)\Inno Setup 6\iscc.exe" .\setup.iss
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
@@ -100,14 +100,13 @@ jobs:
 
       - name: Compile with PyInstaller
         run: |
-          source .venv/bin/activate
-          pyinstaller --name "Artifice" --windowed --add-data "logos:logos" --distpath dist/linux --icon "artifice.png" app.py
+          uvx pyinstaller --name "Artifice" --windowed --add-data "logos:logos" --icon "artifice.png" --noconfirm app.py
 
       - name: Install linuxdeploy and create AppImage
         run: |
           wget -c "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -O linuxdeploy
           chmod +x linuxdeploy
-          ./linuxdeploy --appdir dist/linux/Artifice --desktop-file Artifice.desktop --icon-file=artifice.png --output appimage
+          ./linuxdeploy --appdir dist/Artifice --desktop-file Artifice.desktop --icon-file=artifice.png --output appimage
 
       - name: Upload AppImage artifact
         uses: actions/upload-artifact@v4
