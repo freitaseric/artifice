@@ -103,6 +103,11 @@ jobs:
           uvx pyinstaller --name "Artifice" --windowed --add-data "logos:logos" --icon "artifice.png" --noconfirm app.py
           sync
 
+      - name: Prepare AppDir for linuxdeploy (Create Symlink)
+        run: |
+          mkdir -p dist/Artifice/usr/bin
+          ln -s ../../Artifice dist/Artifice/usr/bin/Artifice
+
       - name: Install linuxdeploy and create AppImage
         run: |
           wget -c "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -O linuxdeploy
