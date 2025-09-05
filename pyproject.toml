@@ -1,0 +1,17 @@
+[project]
+name = "artifice"
+version = "0.1.0"
+description = "Uma aplicação para aplicar logos em imagens."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["customtkinter>=5.2.2", "pillow>=11.3.0"]
+
+[project.gui-scripts]
+artifice = "artifice:app"
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.15.0",
+    "ruff>=0.12.12",
+    "ty>=0.0.1a20",
+]

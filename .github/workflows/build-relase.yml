@@ -1,0 +1,116 @@
+name: Build & Release Cross-Platform
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+      - name: Install 'uv'
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: |
+          uv sync
+
+      - name: Compile with PyInstaller
+        run: |
+          uvx pyinstaller --name "Artifice" --onefile --windowed --add-data "logos:logos" app.py
+
+      - name: Install Inno Setup
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install innosetup
+
+      - name: Create installer
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\iscc.exe" setup.iss
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifice-Windows-Installer
+          path: Artifice-Setup-1.0.exe
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+      - name: Install 'uv'
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: |
+          uv sync
+
+      - name: Compile with PyInstaller
+        run: |
+          uvx pyinstaller --name "Artifice" --windowed --add-data "logos:logos" app.py
+
+      - name: Install 'create-dmg'
+        run: brew install create-dmg
+
+      - name: Create disk image (dmg)
+        run: |
+          create-dmg --volname "Artifice Installer" --window-pos 200 120 --window-size 800 400 --icon-size 100 --app-drop-link 600 185 "dist/Artifice.dmg" "dist/Artifice.app"
+
+      - name: Upload dmg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifice-macOS
+          path: dist/Artifice.dmg
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libtk8.6 tk-dev libfuse2
+
+      - name: Install 'uv'
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install python dependencies
+        run: |
+          uv sync
+
+      - name: Compile with PyInstaller
+        run: |
+          source .venv/bin/activate
+          pyinstaller --name "Artifice" --windowed --add-data "logos:logos" --distpath dist/linux app.py
+
+      - name: Install linuxdeploy and create AppImage
+        run: |
+          wget -c "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -O linuxdeploy
+          chmod +x linuxdeploy
+          ./linuxdeploy --appdir dist/linux/Artifice --output appimage
+
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifice-Linux-AppImage
+          path: Artifice-x86_64.AppImage
