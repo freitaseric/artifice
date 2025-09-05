@@ -9,7 +9,7 @@
 [![Último Commit](https://img.shields.io/github/last-commit/freitaseric/artifice?style=for-the-badge)](https://github.com/freitaseric/artifice/commits/main)
 [![Issues Abertas](https://img.shields.io/github/issues/freitaseric/artifice?style=for-the-badge)](https://github.com/freitaseric/artifice/issues)
 [![Licença](https://img.shields.io/github/license/freitaseric/artifice?style=for-the-badge)](https://github.com/freitaseric/artifice/blob/main/LICENSE)
-[![Python Version](https://img.shields.io/python/required-version-toml?style=for-the-badge&tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Ffreitaseric%2Fartifice%2Fmain%2Fpyproject.toml)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Ffreitaseric%2Fartifice%2Frefs%2Fheads%2Fmain%2Fpyproject.toml&style=for-the-badge)](https://www.python.org/downloads/)
 
 </div>
 
